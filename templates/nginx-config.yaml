@@ -37,6 +37,7 @@ data:
       proxy_set_header X-Permitted-Cross-Domain-Policies "none";
       proxy_set_header X-Robots-Tag "none";
       proxy_set_header X-XSS-Protection "1; mode=block";
+      proxy_set_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;";
 
       # set max upload size
       client_max_body_size 4G;
