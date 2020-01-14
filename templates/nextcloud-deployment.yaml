@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nextcloud
+  name: nextcloud
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nextcloud
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+    spec:
+      containers:
+      - name: nextcloud
+        image: {{ .Values.nextcloud.image }}
+        env:
+        - name: TZ
+          value: Europe/Berlin
+        - name: DEBUG
+          value: "false"
+        - name: NEXTCLOUD_URL
+          value: {{ .Values.externalUrl }}
+        - name: NEXTCLOUD_TRUSTED_DOMAINS
+          value: {{ .Values.serverName }}
+        - name: NEXTCLOUD_ADMIN_USER
+          value: {{ .Values.nextcloud.adminUser }}
+        - name: NEXTCLOUD_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-secrets
+              key: NEXTCLOUD_ADMIN_PASSWORD
+        - name: NEXTCLOUD_UPLOAD_MAX_FILESIZE
+          value: 16G
+        - name: NEXTCLOUD_MAX_FILE_UPLOADS
+          value: "200"
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mariadb.database }}
+        - name: MYSQL_HOST
+          value: mariadb
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: MYSQL_PASSWORD
+        - name: MYSQL_USER
+          value: {{ .Values.mariadb.user }}
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: html
+      restartPolicy: Always
+      volumes:
+      - name: html
+        hostPath:
+          path: "/data/nextcloud"
+
+

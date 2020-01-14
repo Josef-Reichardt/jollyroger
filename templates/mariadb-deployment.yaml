@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mariadb
+  name: mariadb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: {{ .Values.mariadb.image }}
+        ports:
+        - containerPort: 3306
+        args:
+        - --transaction-isolation=READ-COMMITTED
+        - --max-connections=1000
+        env:
+        - name: MYSQL_DATABASE
+          value: {{ .Values.mariadb.database }}
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: MYSQL_PASSWORD
+        - name: MYSQL_USER
+          value: {{ .Values.mariadb.user }}
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mariadb-secrets
+              key: MYSQL_ROOT_PASSWORD
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: db
+      restartPolicy: Always
+      volumes:
+      - name: db
+        hostPath:
+          path: "/data/mariadb"

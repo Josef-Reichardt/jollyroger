@@ -1,0 +1,22 @@
+replicaCount: 1
+
+externalUrl: https://jollyroger.duckdns.org
+serverName: jollyroger.duckdns.org
+
+letsencrypt:
+  image: josefreichardt/letsencrypt-kubernetes-secret:latest
+  schedule: "0 2 * * 1"
+  domains: jollyroger.duckdns.org
+  email: reichardt.josef@gmail.com
+
+mariadb:
+  image: mariadb:10.3
+  user: nextcloud
+  database: nextcloud
+  # password: Geheim123! # pass via --set
+  # initialRootPassword: Geheim123! # pass via --set
+
+nextcloud:
+  image: nextcloud
+  # initialAdminPassword: Geheim123! # pass via --set
+  adminUser: admin

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  default.conf: |
+    upstream letsencrypt {
+      server letsencrypt:80 max_fails=0 fail_timeout=1s;
+    }
+
+    server {
+      listen 80;
+      listen [::]:80;
+      server_name {{ .Values.serverName }};
+
+      location ^~ /.well-known/acme-challenge/ {
+        proxy_pass http://letsencrypt;
+      }
+
+      location / {
+        return 301 https://$server_name$request_uri;
+      }
+    }
+
+    server {
+      listen 443 ssl;
+      access_log  /var/log/nginx/access.log;
+
+      server_name {{ .Values.serverName }};
+      ssl_certificate /etc/nginx/ssl/fullchain.pem;
+      ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+
+      location / {
+        proxy_pass http://nextcloud;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
+      }
+    }
+
