@@ -23,7 +23,7 @@ echo "### Get Kubernetes Service information ###"
 kubernetesDashboardPort=$(microk8s.kubectl get all --all-namespaces | grep service/kubernetes-dashboard | sed 's/^.*443:\([0-9]*\)\/TCP.*$/\1/')
 echo "### Get Kubernetes Dashboard Token ###"
 token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
-kubernetesDashboardToken=$(microk8s.kubectl -n kube-system describe secret "$token" | grep "token:" | sed 's/^token: //')
+kubernetesDashboardToken=$(microk8s.kubectl -n kube-system describe secret "$token" | grep "token:" | sed 's/^token:\s*//')
 
 initialDatabaseRootPassword=
 databasePassword=
@@ -32,8 +32,8 @@ if microk8s.helm list | grep -q jollyroger
 then
   echo ""
   echo "### Upgrade Helm Chart ###"
-  initialDatabaseRootPassword=$(microk8s.kubectl get secret nextcloud-secrets -o yaml | grep MYSQL_ROOT_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d)
-  databasePassword=$(microk8s.kubectl get secret nextcloud-secrets -o yaml | grep MYSQL_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d)
+  initialDatabaseRootPassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml | grep MYSQL_ROOT_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d)
+  databasePassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml | grep MYSQL_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d)
   initialNextcloudAdminPassword=$(microk8s.kubectl get secret nextcloud-secrets -o yaml | grep NEXTCLOUD_ADMIN_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d)
   microk8s.helm upgrade jollyroger "$(dirname "$0")" \
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
