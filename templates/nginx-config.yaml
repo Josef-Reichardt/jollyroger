@@ -30,14 +30,14 @@ data:
       ssl_certificate /etc/nginx/ssl/fullchain.pem;
       ssl_certificate_key /etc/nginx/ssl/privkey.pem;
 
-      proxy_set_header Referrer-Policy "no-referrer";
-      proxy_set_header X-Content-Type-Options "nosniff";
-      proxy_set_header X-Download-Options "noopen";
-      proxy_set_header X-Frame-Options "SAMEORIGIN";
-      proxy_set_header X-Permitted-Cross-Domain-Policies "none";
-      proxy_set_header X-Robots-Tag "none";
-      proxy_set_header X-XSS-Protection "1; mode=block";
-      proxy_set_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;";
+      add_header Referrer-Policy "no-referrer" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-Download-Options "noopen" always;
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Permitted-Cross-Domain-Policies "none" always;
+      add_header X-Robots-Tag "none" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;" always;
 
       # set max upload size
       client_max_body_size 4G;
