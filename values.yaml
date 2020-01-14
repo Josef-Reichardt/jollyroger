@@ -10,13 +10,16 @@ letsencrypt:
   email: reichardt.josef@gmail.com
 
 mariadb:
-  image: mariadb:10.3
+  image: mariadb:latest
   user: nextcloud
   database: nextcloud
   # password: Geheim123! # pass via --set
   # initialRootPassword: Geheim123! # pass via --set
 
 nextcloud:
-  image: nextcloud
+  image: nextcloud:latest
   # initialAdminPassword: Geheim123! # pass via --set
   adminUser: admin
+
+nginx:
+  image: nginx:latest
