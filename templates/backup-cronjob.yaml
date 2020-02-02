@@ -1,0 +1,64 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backup-job
+  labels:
+    app: backup-job
+spec:
+  schedule: {{ .Values.backup.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: backup-job
+          labels:
+            app: backup-job
+        spec:
+          containers:
+            - image: {{ .Values.backup.image }}
+              name: backup-job
+              imagePullPolicy: Always
+              command:
+                - "apt-get update && apt-get install -y sshpass"
+                - "export BACKUP_FILE=\"/tmp/jollyroger_backup_$(date '+%Y-%m-%d_%H-%M-%S').tar.gz\""
+                - "rm ${BACKUP_FILE}"
+                - "tar -zcvf ${BACKUP_FILE} /nextcloud-data"
+                - "mysqldump -h mariadb -u root -p${MYSQL_ROOT_PASSWORD} > /tmp/nextcloud.sql"
+                - "cd /tmp"
+                - "tar -zcvf ${BACKUP_FILE} nextcloud.sql"
+                - "sshpass -p \"${SSH_TARGET_PASSWORD}\" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}"
+                - "sshpass -p \"${SSH_TARGET_PASSWORD}\" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} find ${SSH_TARGET_PATH} -name *.tar.gz -mtime +22 -type f  -print | xargs -0 rm -f"
+              env:
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mariadb-secrets
+                      key: MYSQL_ROOT_PASSWORD
+                - name: SSH_TARGET_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_HOST
+                - name: SSH_TARGET_PATH
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_PATH
+                - name: SSH_TARGET_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_USER
+                - name: SSH_TARGET_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_PASSWORD
+              volumeMounts:
+                - mountPath: /nextcloud-data
+                  name: nextcloud-data
+          restartPolicy: Never
+          volumes:
+            - name: nextcloud-data
+              hostPath:
+                path: "/data/nextcloud"

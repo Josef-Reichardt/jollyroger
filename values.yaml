@@ -23,3 +23,11 @@ nextcloud:
 
 nginx:
   image: nginx:latest
+
+backup:
+  image: mariadb:latest
+  schedule: "0 3 * * 0"
+  # targetSshHost: nas # pass via --set
+  # targetSshPath: backups # pass via --set
+  # targetSshUser: admin # pass via --set
+  # targetSshPassword: Geheim123! # pass via --set

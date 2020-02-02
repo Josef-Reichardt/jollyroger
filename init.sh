@@ -38,14 +38,25 @@ then
   microk8s.helm upgrade jollyroger "$(dirname "$0")" \
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
-    --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword"
+    --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
+    --set "backup.targetSshHost=$1" \
+    --set "backup.targetSshPath=$2" \
+    --set "backup.targetSshUser=$3" \
+    --set "backup.targetSshPassword=$4"
 else
   echo ""
   echo "### Deploy Helm Chart ###"
   initialDatabaseRootPassword=$(head -c 24 /dev/random | base64)
   databasePassword=$(head -c 24 /dev/random | base64)
   initialNextcloudAdminPassword=$(head -c 24 /dev/random | base64)
-  microk8s.helm install "$(dirname "$0")" --name jollyroger --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" --set "mariadb.password=$databasePassword" --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword"
+  microk8s.helm install "$(dirname "$0")" --name jollyroger \
+    --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
+    --set "mariadb.password=$databasePassword" \
+    --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
+    --set "backup.targetSshHost=$1" \
+    --set "backup.targetSshPath=$2" \
+    --set "backup.targetSshUser=$3" \
+    --set "backup.targetSshPassword=$4"
 fi;
 
 echo ""
