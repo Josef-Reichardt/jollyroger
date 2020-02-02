@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx-config
+  name: backup-config
 data:
   run_backup.sh: |
     #!/bin/bash
