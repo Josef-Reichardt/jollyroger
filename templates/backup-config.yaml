@@ -9,12 +9,11 @@ data:
     apt-get update && apt-get install -y sshpass
     export BACKUP_FILE="/tmp/jollyroger_backup_$(date '+%Y-%m-%d_%H-%M-%S').tar.gz"
     echo "### Backup filename will be ${BACKUP_FILE}"
-    echo "### Backup nextcloud files ..."
-    tar -zcvf ${BACKUP_FILE} /nextcloud-data
-    echo "### Backup nextcloud database ..."
-    mysqldump -h mariadb -u root -p${MYSQL_ROOT_PASSWORD} --databases nextcloud > /tmp/nextcloud.sql
-    cd /tmp
-    tar -Azvf ${BACKUP_FILE} nextcloud.sql
+    echo "### Create nextcloud database backup ..."
+    mysqldump -h mariadb -u root -p${MYSQL_ROOT_PASSWORD} --databases nextcloud > /nextcloud.sql
+    echo "### Compress backup ..."
+    cd /
+    tar -czvf ${BACKUP_FILE} nextcloud-data nextcloud.sql
     echo "### Upload backup file ..."
     sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
     echo "### Cleanup old backups ..."
