@@ -18,7 +18,7 @@ spec:
             - image: {{ .Values.backup.image }}
               name: backup-job
               imagePullPolicy: Always
-              command: ["chmod +x /backup-config/run_backup.sh && /backup-config/run_backup.sh"]
+              command: ["/backup-config/run_backup.sh"]
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
@@ -46,15 +46,17 @@ spec:
                       name: backup-secrets
                       key: SSH_TARGET_PASSWORD
               volumeMounts:
-                - mountPath: /nextcloud-data
-                  name: nextcloud-data
-                - mountPath: /backup-config
-                  name: backup-config
+                - name: nextcloud-data
+                  mountPath: /nextcloud-data
+                - name: backup-config
+                  mountPath: /backup-config/run_backup.sh
+                  subPath: run_backup.sh
           restartPolicy: Never
           volumes:
             - name: backup-config
               configMap:
                 name: backup-config
+                defaultMode: 0777
             - name: nextcloud-data
               hostPath:
                 path: "/data/nextcloud"
