@@ -14,8 +14,9 @@ data:
     echo "### Backup nextcloud database ..."
     mysqldump -h mariadb -u root -p${MYSQL_ROOT_PASSWORD} --databases nextcloud > /tmp/nextcloud.sql
     cd /tmp
-    tar -zcvf ${BACKUP_FILE} nextcloud.sql
+    tar -Azvf ${BACKUP_FILE} nextcloud.sql
     echo "### Upload backup file ..."
     sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
     echo "### Cleanup old backups ..."
     sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} find ${SSH_TARGET_PATH} -name *.tar.gz -mtime +22 -type f  -print | xargs -0 rm -f
+    echo "Finished!"
