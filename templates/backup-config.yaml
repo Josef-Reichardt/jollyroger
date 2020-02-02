@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  run_backup.sh: |
+    #!/bin/bash
+    apt-get update && apt-get install -y sshpass
+    export BACKUP_FILE="/tmp/jollyroger_backup_$(date '+%Y-%m-%d_%H-%M-%S').tar.gz"
+    rm ${BACKUP_FILE}
+    tar -zcvf ${BACKUP_FILE} /nextcloud-data
+    mysqldump -h mariadb -u root -p${MYSQL_ROOT_PASSWORD} > /tmp/nextcloud.sql
+    cd /tmp
+    tar -zcvf ${BACKUP_FILE} nextcloud.sql
+    sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
+    sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} find ${SSH_TARGET_PATH} -name *.tar.gz -mtime +22 -type f  -print | xargs -0 rm -f
