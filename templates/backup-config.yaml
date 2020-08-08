@@ -17,5 +17,8 @@ data:
     echo "### Upload backup file ..."
     sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
     echo "### Cleanup old backups ..."
+    # display:
+    sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} find ${SSH_TARGET_PATH} -name *.tar.gz -follow -mtime +22 -type f -print
+    # remove:
     sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} find ${SSH_TARGET_PATH} -name *.tar.gz -follow -mtime +22 -type f -print | xargs -0 rm -f
     echo "Finished!"
