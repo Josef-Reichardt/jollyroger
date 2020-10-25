@@ -66,6 +66,3 @@ echo "##########################################################################
 [ -n "$initialNextcloudAdminPassword" ] && echo "### Initial Nextcloud Admin Password: $initialNextcloudAdminPassword"
 [ -n "$kubernetesDashboardPort" ] && echo "### Kubernetes Dashboard Port: $kubernetesDashboardPort"
 [ -n "$kubernetesDashboardToken" ] && echo "### Kubernetes Dashboard Token: $kubernetesDashboardToken"
-
-cd gitlab-runner || exit 1
-./init.sh
