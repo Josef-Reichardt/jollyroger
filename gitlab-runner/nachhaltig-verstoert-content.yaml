@@ -145,12 +145,12 @@ runners:
         privileged = false
         poll_timeout = 180
         output_limit = 4096
-#        cpu_limit = "1"
-#        memory_limit = "4Gi"
-#        service_cpu_limit = "1"
-#        service_memory_limit = "4Gi"
-#        helper_cpu_limit = "1"
-#        helper_memory_limit = "4Gi"
+        cpu_limit = "1"
+        memory_limit = "4Gi"
+        service_cpu_limit = "1"
+        service_memory_limit = "4Gi"
+        helper_cpu_limit = "1"
+        helper_memory_limit = "4Gi"
 
   ## Default container image to use for builds when none is specified
   ##
