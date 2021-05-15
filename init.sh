@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Params:
+#   $1 = backup.targetSshHost
+#   $2 = backup.targetSshPath
+#   $3 = backup.targetSshUser
+#   $4 = backup.targetSshPassword
+
 if microk8s.status | grep -q "dns: disabled"
 then
   echo "### Enable Kubernetes DNS ###"
