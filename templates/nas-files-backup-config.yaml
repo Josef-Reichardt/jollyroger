@@ -13,7 +13,7 @@ data:
     echo "### Cleanup old local backupfiles ..."
     rm -fr "/tmp/${BACKUP_FILE_PREFIX}*.tar.gz"
     echo "### Backup filename will be ${BACKUP_FILE}"
-    echo "### Compress backup ..."
+    echo "### Compress backup (${NAS_SSH_USER}@${NAS_SSH_HOST} --> ${NAS_FILES_PATH} --> ${BACKUP_FILE}) ..."
     sshpass -p "${NAS_SSH_PASSWORD}" ssh ${NAS_SSH_USER}@${NAS_SSH_HOST} tar -czvf ${BACKUP_FILE} ${NAS_FILES_PATH}
     sshpass -p "${NAS_SSH_PASSWORD}" ssh ${NAS_SSH_USER}@${NAS_SSH_HOST} ls -l ${BACKUP_FILE}
     echo "### Download backup file ..."
