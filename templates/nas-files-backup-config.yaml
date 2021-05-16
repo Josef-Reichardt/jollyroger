@@ -15,8 +15,9 @@ data:
     echo "### Backup filename will be ${BACKUP_FILE}"
     echo "### Compress backup ..."
     sshpass -p "${NAS_SSH_PASSWORD}" ssh ${NAS_SSH_USER}@${NAS_SSH_HOST} tar -czvf ${BACKUP_FILE} ${NAS_FILES_PATH}
+    sshpass -p "${NAS_SSH_PASSWORD}" ssh ${NAS_SSH_USER}@${NAS_SSH_HOST} ls -l ${BACKUP_FILE}
     echo "### Download backup file ..."
-    sshpass -p "${NAS_SSH_PASSWORD}" scp -r ${NAS_SSH_USER}@${NAS_SSH_USER}:${BACKUP_FILE} ${BACKUP_FILE}
+    sshpass -p "${NAS_SSH_PASSWORD}" scp -r ${NAS_SSH_USER}@${NAS_SSH_HOST}:${BACKUP_FILE} ${BACKUP_FILE}
     echo "### Upload backup file ..."
     sshpass -p "${SSH_TARGET_PASSWORD}" scp -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
 
