@@ -1,0 +1,15 @@
+backup:
+  targetSsh:
+    host: backupnas
+    user: user
+    password: "Geheim123!"
+    path: /shared/Sicherungen
+  nas:
+    ssh:
+      host: nas
+      user: user
+      password: "Geheim123!"
+    files:
+      path: "/path1 /path2"
+    fotos:
+      path: "/shared/fotos"

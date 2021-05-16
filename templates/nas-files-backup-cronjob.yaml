@@ -1,0 +1,77 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: nas-file-backup-job
+  labels:
+    app: nas-file-backup-job
+spec:
+  schedule: {{ .Values.backup.nas.files.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: nas-file-backup-job
+          labels:
+            app: nas-file-backup-job
+        spec:
+          containers:
+            - image: {{ .Values.backup.nas.image }}
+              name: nas-file-backup-job
+              imagePullPolicy: Always
+              command: ["/nas-file-backup-config/run_backup.sh"]
+              env:
+                - name: NAS_SSH_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: nas-secrets
+                      key: NAS_SSH_HOST
+                - name: NAS_SSH_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: nas-secrets
+                      key: NAS_SSH_USER
+                - name: NAS_SSH_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nas-secrets
+                      key: NAS_SSH_PASSWORD
+                - name: NAS_FILES_PATH
+                  valueFrom:
+                    secretKeyRef:
+                      name: nas-secrets
+                      key: NAS_FILES_PATH
+                - name: SSH_TARGET_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_HOST
+                - name: SSH_TARGET_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_HOST
+                - name: SSH_TARGET_PATH
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_PATH
+                - name: SSH_TARGET_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_USER
+                - name: SSH_TARGET_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: backup-secrets
+                      key: SSH_TARGET_PASSWORD
+              volumeMounts:
+                - name: nas-file-backup-config
+                  mountPath: /nas-file-backup-config/run_backup.sh
+                  subPath: run_backup.sh
+          restartPolicy: Never
+          volumes:
+            - name: nas-file-backup-config
+              configMap:
+                name: nas-file-backup-config
+                defaultMode: 0777

@@ -1,3 +1,7 @@
+# Secrets
+templates/_backup-secrets.yaml
+templates/_nas-secrets.yaml
+
 # IntelliJ IDEA
 /.idea/
 /*.iml

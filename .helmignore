@@ -15,6 +15,9 @@
 *.bak
 *.tmp
 *~
+
+templates/*.example
+
 # Various IDEs
 .project
 .idea/

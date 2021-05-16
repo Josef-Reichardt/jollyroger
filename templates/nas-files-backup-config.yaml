@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nas-files-backup-config
+data:
+  run_backup.sh: |
+    #!/bin/bash
+    echo "### Install sshpass"
+    apt-get update && apt-get install -y sshpass
+
+    export BACKUP_FILE_PREFIX="nas_files_backup_"
+    export BACKUP_FILE="/tmp/${BACKUP_FILE_PREFIX}$(date '+%Y-%m-%d_%H-%M-%S').tar.gz"
+    echo "### Cleanup old local backupfiles ..."
+    rm -fr "/tmp/${BACKUP_FILE_PREFIX}*.tar.gz"
+    echo "### Backup filename will be ${BACKUP_FILE}"
+    echo "### Compress backup ..."
+    sshpass -p "${NAS_SSH_PASSWORD}" ssh ${NAS_SSH_USER}@${NAS_SSH_HOST} tar -czvf ${BACKUP_FILE} ${NAS_FILES_PATH}
+    echo "### Download backup file ..."
+    sshpass -p "${NAS_SSH_PASSWORD}" scp -r ${NAS_SSH_USER}@${NAS_SSH_USER}:${BACKUP_FILE} ${BACKUP_FILE}
+    echo "### Upload backup file ..."
+    sshpass -p "${SSH_TARGET_PASSWORD}" scp -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
+
+    echo "### Cleanup local backupfile ..."
+    rm -fr "${BACKUP_FILE}"
+    echo "### Cleanup old backups ..."
+    OUTDATED_FILES=$(sshpass -p "${SSH_TARGET_PASSWORD}" \
+      ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} \
+      find ${SSH_TARGET_PATH} -name "${BACKUP_FILE_PREFIX}*.tar.gz" -follow -mtime +22 -type f -print)
+    echo $OUTDATED_FILES
+    echo $OUTDATED_FILES | xargs -0 sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} rm -f
+    echo "Finished!"

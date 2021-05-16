@@ -1,24 +1,24 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: backup-job
+  name: nextcloud-backup-job
   labels:
-    app: backup-job
+    app: nextcloud-backup-job
 spec:
-  schedule: {{ .Values.backup.schedule }}
+  schedule: {{ .Values.backup.nextcloud.schedule }}
   jobTemplate:
     spec:
       template:
         metadata:
-          name: backup-job
+          name: nextcloud-backup-job
           labels:
-            app: backup-job
+            app: nextcloud-backup-job
         spec:
           containers:
-            - image: {{ .Values.backup.image }}
-              name: backup-job
+            - image: {{ .Values.backup.nextcloud.image }}
+              name: nextcloud-backup-job
               imagePullPolicy: Always
-              command: ["/backup-config/run_backup.sh"]
+              command: ["/nextcloud-backup-config/run_backup.sh"]
               env:
                 - name: MYSQL_ROOT_PASSWORD
                   valueFrom:
@@ -48,14 +48,14 @@ spec:
               volumeMounts:
                 - name: nextcloud-data
                   mountPath: /nextcloud-data
-                - name: backup-config
-                  mountPath: /backup-config/run_backup.sh
+                - name: nextcloud-backup-config
+                  mountPath: /nextcloud-backup-config/run_backup.sh
                   subPath: run_backup.sh
           restartPolicy: Never
           volumes:
-            - name: backup-config
+            - name: nextcloud-backup-config
               configMap:
-                name: backup-config
+                name: nextcloud-backup-config
                 defaultMode: 0777
             - name: nextcloud-data
               hostPath:

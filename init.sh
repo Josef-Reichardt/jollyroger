@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Params:
-#   $1 = backup.targetSshHost
-#   $2 = backup.targetSshPath
-#   $3 = backup.targetSshUser
-#   $4 = backup.targetSshPassword
-
 if microk8s.status | grep -q "dns: disabled"
 then
   echo "### Enable Kubernetes DNS ###"
@@ -45,10 +39,8 @@ then
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
-    --set "backup.targetSshHost=$1" \
-    --set "backup.targetSshPath=$2" \
-    --set "backup.targetSshUser=$3" \
-    --set "backup.targetSshPassword=$4"
+    - f base.yaml \
+    - f values.yaml
 else
   echo ""
   echo "### Deploy Helm Chart ###"
@@ -59,10 +51,8 @@ else
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
-    --set "backup.targetSshHost=$1" \
-    --set "backup.targetSshPath=$2" \
-    --set "backup.targetSshUser=$3" \
-    --set "backup.targetSshPassword=$4"
+    - f base.yaml \
+    - f values.yaml
 fi;
 
 echo ""
