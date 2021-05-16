@@ -39,8 +39,8 @@ then
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
-    - f base.yaml \
-    - f values.yaml
+    -f base.yaml \
+    -f values.yaml
 else
   echo ""
   echo "### Deploy Helm Chart ###"
@@ -51,8 +51,8 @@ else
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
-    - f base.yaml \
-    - f values.yaml
+    -f base.yaml \
+    -f values.yaml
 fi;
 
 echo ""
