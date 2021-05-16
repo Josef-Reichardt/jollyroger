@@ -1,24 +1,24 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: nas-file-backup-job
+  name: nas-files-backup-job
   labels:
-    app: nas-file-backup-job
+    app: nas-files-backup-job
 spec:
   schedule: {{ .Values.backup.nas.files.schedule }}
   jobTemplate:
     spec:
       template:
         metadata:
-          name: nas-file-backup-job
+          name: nas-files-backup-job
           labels:
-            app: nas-file-backup-job
+            app: nas-files-backup-job
         spec:
           containers:
             - image: {{ .Values.backup.nas.image }}
-              name: nas-file-backup-job
+              name: nas-files-backup-job
               imagePullPolicy: Always
-              command: ["/nas-file-backup-config/run_backup.sh"]
+              command: ["/nas-files-backup-config/run_backup.sh"]
               env:
                 - name: NAS_SSH_HOST
                   valueFrom:
@@ -66,12 +66,12 @@ spec:
                       name: backup-secrets
                       key: SSH_TARGET_PASSWORD
               volumeMounts:
-                - name: nas-file-backup-config
-                  mountPath: /nas-file-backup-config/run_backup.sh
+                - name: nas-files-backup-config
+                  mountPath: /nas-files-backup-config/run_backup.sh
                   subPath: run_backup.sh
           restartPolicy: Never
           volumes:
-            - name: nas-file-backup-config
+            - name: nas-files-backup-config
               configMap:
-                name: nas-file-backup-config
+                name: nas-files-backup-config
                 defaultMode: 0777
