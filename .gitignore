@@ -1,6 +1,7 @@
 # Secrets
 templates/_backup-secrets.yaml
 templates/_nas-secrets.yaml
+gitlab-runner/token.yaml
 
 # IntelliJ IDEA
 /.idea/
