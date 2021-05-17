@@ -40,7 +40,7 @@ spec:
                     secretKeyRef:
                       name: nas-secrets
                       key: NAS_FILES_PATH
-                - name: SSH_TARGET_HOST_DEBUG
+                - name: SSH_TARGET_HOST
                   valueFrom:
                     secretKeyRef:
                       name: backup-secrets
@@ -52,7 +52,7 @@ spec:
                     secretKeyRef:
                       name: backup-secrets
                       key: SSH_TARGET_PATH
-                - name: SSH_TARGET_HOST
+                - name: SSH_TARGET_HOST_DEBUG1
                   valueFrom:
                     secretKeyRef:
                       name: backup-secrets
