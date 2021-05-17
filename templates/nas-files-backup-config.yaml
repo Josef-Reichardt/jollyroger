@@ -14,14 +14,14 @@ data:
     rm -fr "/tmp/${BACKUP_FILE_PREFIX}*.tar.gz"
     echo "### Backup filename will be ${BACKUP_FILE}"
     echo "### Compress backup (${NAS_SSH_USER}@${NAS_SSH_HOST} --> ${NAS_FILES_PATH} --> ${BACKUP_FILE}) ..."
-    sshpass -p "${NAS_SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no ${NAS_SSH_USER}@${NAS_SSH_HOST} tar -czvf ${BACKUP_FILE} ${NAS_FILES_PATH}
+    sshpass -p "${NAS_SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no ${NAS_SSH_USER}@${NAS_SSH_HOST} tar -czvfh ${BACKUP_FILE} ${NAS_FILES_PATH}
     sshpass -p "${NAS_SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no ${NAS_SSH_USER}@${NAS_SSH_HOST} ls -l ${BACKUP_FILE}
     echo "### Download backup file ..."
     sshpass -p "${NAS_SSH_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${NAS_SSH_USER}@${NAS_SSH_HOST}:${BACKUP_FILE} ${BACKUP_FILE}
     echo "### Delete remote backup file ..."
     sshpass -p "${NAS_SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no ${NAS_SSH_USER}@${NAS_SSH_HOST} rm -fr ${BACKUP_FILE}
-    ls -l ${BACKUP_FILE}
     echo "### Upload backup file (${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME}:${SSH_TARGET_PATH}) ..."
+    ls -l ${BACKUP_FILE}
     sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME}:${SSH_TARGET_PATH}
     sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME} ls -l ${SSH_TARGET_PATH}
 
