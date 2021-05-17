@@ -21,16 +21,16 @@ data:
     echo "### Delete remote backup file ..."
     sshpass -p "${NAS_SSH_PASSWORD}" ssh -o StrictHostKeyChecking=no ${NAS_SSH_USER}@${NAS_SSH_HOST} rm -fr ${BACKUP_FILE}
     ls -l ${BACKUP_FILE}
-    echo "### Upload backup file (${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}) ..."
-    sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOST}:${SSH_TARGET_PATH}
-    sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} ls -l ${SSH_TARGET_PATH}
+    echo "### Upload backup file (${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME}:${SSH_TARGET_PATH}) ..."
+    sshpass -p "${SSH_TARGET_PASSWORD}" scp -o StrictHostKeyChecking=no -r ${BACKUP_FILE} ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME}:${SSH_TARGET_PATH}
+    sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME} ls -l ${SSH_TARGET_PATH}
 
     echo "### Cleanup local backupfile ..."
     rm -fr ${BACKUP_FILE}
     echo "### Cleanup old backups ..."
-    OUTDATED_FILES=$(sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} \
+    OUTDATED_FILES=$(sshpass -p "${SSH_TARGET_PASSWORD}" ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME} \
       find ${SSH_TARGET_PATH} -name "${BACKUP_FILE_PREFIX}*.tar.gz" -follow -mtime +22 -type f -print)
     echo $OUTDATED_FILES
     echo $OUTDATED_FILES | xargs -0 sshpass -p "${SSH_TARGET_PASSWORD}" \
-      ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOST} rm -f
+      ssh -o StrictHostKeyChecking=no ${SSH_TARGET_USER}@${SSH_TARGET_HOSTNAME} rm -f
     echo "Finished!"
