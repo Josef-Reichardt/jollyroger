@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: nextcloud
 spec:
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
   selector:
     app: nextcloud
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
