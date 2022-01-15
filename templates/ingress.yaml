@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
-    kubernetes.io/ingress.class: nginx
+    ingressClassName: nginx
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
 spec:
@@ -22,4 +22,3 @@ spec:
                 name: nginx
                 port:
                   name: http
-
