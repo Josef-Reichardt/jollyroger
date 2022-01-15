@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: ClusterIssuer
+metadata:
+  name: jollyroger-letsencrypt-issuer
+  labels:
+    name: jollyroger-letsencrypt-issuer
+spec:
+  acme:
+    email: {{ .Values.letsencrypt.email }}
+    privateKeySecretRef:
+      name: jollyroger-letsencrypt-secret
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - http01:
+          ingress:
+            class: nginx

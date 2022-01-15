@@ -1,15 +1,23 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: true
+    cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
 spec:
-  rules:
+  tls:
+    - secretName: jollyroger-letsencryp-secret
+      hosts:
+        - jollyroger.duckdns.org
     - host: jollyroger.duckdns.org
       http:
         paths:
           - backend:
-            serviceName: nextcloud
-            servicePort: 80
-          - backend:
-            serviceName: nextcloud
-            servicePort: 443
+            service:
+              name: nextcloud
+              port:
+                number: 80
+            path: /
+            pathType: Exact
