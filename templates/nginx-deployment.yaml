@@ -24,9 +24,6 @@ spec:
         volumeMounts:
         - name: nginx-configs
           mountPath: /etc/nginx/conf.d
-        - name: nginx-ssl
-          mountPath: /etc/nginx/ssl
-          readOnly: true
         livenessProbe:
           httpGet:
             path: /
@@ -35,7 +32,4 @@ spec:
         - name: nginx-configs
           configMap:
             name: nginx-config
-        - name: nginx-ssl
-          secret:
-            secretName: letsencrypt-certs
 
