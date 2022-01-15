@@ -8,7 +8,7 @@ metadata:
     cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
 spec:
   tls:
-    - secretName: jollyroger-letsencryp-secret
+    - secretName: jollyroger-letsencrypt-secret
       hosts:
         - jollyroger.duckdns.org
   rules:
