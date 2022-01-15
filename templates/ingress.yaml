@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+spec:
+  rules:
+    - host: jollyroger.duckdns.org
+      http:
+        paths:
+          - backend:
+            serviceName: nextcloud
+            servicePort: 80
+          - backend:
+            serviceName: nextcloud
+            servicePort: 443
