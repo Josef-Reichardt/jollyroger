@@ -11,13 +11,15 @@ spec:
     - secretName: jollyroger-letsencryp-secret
       hosts:
         - jollyroger.duckdns.org
+  rules:
     - host: jollyroger.duckdns.org
       http:
         paths:
-          - backend:
-            service:
-              name: nextcloud
-              port:
-                number: 80
+          - pathType: Exact
             path: /
-            pathType: Exact
+            backend:
+              service:
+                name: nextcloud
+                port:
+                  number: 80
+
