@@ -15,7 +15,7 @@ spec:
     - host: jollyroger.duckdns.org
       http:
         paths:
-          - pathType: Exact
+          - pathType: Prefix
             path: /
             backend:
               service:
