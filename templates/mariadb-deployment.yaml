@@ -24,6 +24,7 @@ spec:
         args:
         - --transaction-isolation=READ-COMMITTED
         - --max-connections=1000
+        - --innodb-file-per-table
         env:
         - name: MYSQL_DATABASE
           value: {{ .Values.mariadb.database }}
