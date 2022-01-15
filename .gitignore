@@ -1,5 +1,6 @@
 # Secrets
 /values.yaml
+/values.yaml.bak*
 /gitlab-runner/token.yaml
 
 # IntelliJ IDEA
