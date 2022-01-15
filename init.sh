@@ -6,6 +6,11 @@ then
   microk8s.enable dns
 fi;
 
+echo ""
+echo "### Install cert-manager ###"
+microk8s.helm repo add jetstack https://charts.jetstack.io
+microk8s.kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
+
 kubernetesDashboardPort=
 kubernetesDashboardToken=
 if microk8s.status | grep -q "dashboard: disabled"
@@ -39,6 +44,9 @@ then
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
+    --set ingressShim.defaultIssuerName=jollyroger-letsencrypt-issuer \
+    --set ingressShim.defaultIssuerKind=ClusterIssuer \
+    --set ingressShim.defaultIssuerGroup=cert-manager.io \
     -f base.yaml \
     -f values.yaml
 else
@@ -51,6 +59,9 @@ else
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
+    --set ingressShim.defaultIssuerName=jollyroger-letsencrypt-issuer \
+    --set ingressShim.defaultIssuerKind=ClusterIssuer \
+    --set ingressShim.defaultIssuerGroup=cert-manager.io \
     -f base.yaml \
     -f values.yaml
 fi;
