@@ -26,7 +26,7 @@ spec:
           mountPath: /etc/nginx/conf.d
         livenessProbe:
           httpGet:
-            path: /
+            path: /login
             port: 80
       volumes:
         - name: nginx-configs
