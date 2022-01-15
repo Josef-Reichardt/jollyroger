@@ -4,9 +4,6 @@ externalUrl: https://jollyroger.duckdns.org
 serverName: jollyroger.duckdns.org
 
 letsencrypt:
-  image: josefreichardt/letsencrypt-kubernetes-secret:latest
-  schedule: "0 2 1 * *"
-  domains: jollyroger.duckdns.org
   email: reichardt.josef@gmail.com
 
 mariadb:

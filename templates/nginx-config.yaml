@@ -13,22 +13,7 @@ data:
       listen [::]:80;
       server_name {{ .Values.serverName }};
 
-      location ^~ /.well-known/acme-challenge/ {
-        proxy_pass http://letsencrypt;
-      }
-
-      location / {
-        return 301 https://$server_name$request_uri;
-      }
-    }
-
-    server {
-      listen 443 ssl;
       access_log  /var/log/nginx/access.log;
-
-      server_name {{ .Values.serverName }};
-      ssl_certificate /etc/nginx/ssl/fullchain.pem;
-      ssl_certificate_key /etc/nginx/ssl/privkey.pem;
 
       add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload;" always;
 
