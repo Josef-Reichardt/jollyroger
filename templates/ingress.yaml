@@ -6,6 +6,8 @@ metadata:
     kubernetes.io/ingress.class: public
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
+    nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+    nginx.org/client-max-body-size: "1g"
 spec:
   tls:
     - secretName: jollyroger-letsencrypt-secret
