@@ -25,3 +25,7 @@ backup:
   nextcloud:
     image: mariadb:latest
     schedule: "0 1 * * 0"
+
+plex:
+  image: plexinc/pms-docker
+
