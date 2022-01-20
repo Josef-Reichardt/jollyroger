@@ -58,8 +58,8 @@ spec:
               mountPath: /config
             - name: transcode
               mountPath: /transcode
-            - name: data
-              mountPath: /data
+            - name: filme
+              mountPath: /data/filme
       volumes:
         - name: config
           hostPath:
@@ -67,6 +67,6 @@ spec:
         - name: transcode
           hostPath:
             path: "/data/plex/transcode"
-        - name: data
-          hostPath:
-            path: "/data/plex/data"
+        - name: filme
+          persistentVolumeClaim:
+            claimName: islademuerta-filme
