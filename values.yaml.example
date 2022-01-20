@@ -4,3 +4,6 @@ backup:
     user: user
     password: "Geheim123!"
     path: /shared/Sicherungen
+
+plex:
+  claim: claim-1234567890

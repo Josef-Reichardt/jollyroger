@@ -22,6 +22,8 @@ spec:
           env:
             - name: "TZ"
               value: "Europe/Berlin"
+            - name: "PLEX_CLAIM"
+              value: {{ .Values.plex.claim }}
           ports:
             - name: http
               containerPort: 32400
