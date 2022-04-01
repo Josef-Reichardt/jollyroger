@@ -6,11 +6,18 @@ data:
   custom-entrypoint.sh: |
     #!/bin/bash
 
-    apt-get update && apt-get install -y \
-      php-imagick \
+    set -e
+
+    apt-get update \
+      && apt-get install -y libmagickwand-dev --no-install-recommends \
+      && apt-get install -y \
+        cron \
+      && pecl install imagick && docker-php-ext-enable imagick \
       && rm -rf /var/lib/apt/lists/*
 
-    /entrypoint.sh
+    crontab /etc/cron.d/nextcloud
+
+    /entrypoint.sh apache2-foreground
   crontab: |
     */5 * * * * www-data php -f /var/www/html/cron.php
     0   0 * * 0 www-data php -f /var/www/html/occ fulltextsearch:index
