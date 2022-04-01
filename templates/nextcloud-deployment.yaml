@@ -24,6 +24,8 @@ spec:
           value: Europe/Berlin
         - name: DEBUG
           value: "false"
+        - name: PHP_MEMORY_LIMIT
+          value: "512M"
         - name: NEXTCLOUD_URL
           value: {{ .Values.externalUrl }}
         - name: NEXTCLOUD_TRUSTED_DOMAINS
