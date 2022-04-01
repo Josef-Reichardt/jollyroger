@@ -69,4 +69,4 @@ spec:
             path: "/data/plex/transcode"
         - name: data
           hostPath:
-            path: "/mnt/multimedia"
+            path: "/mnt/plex-data"
