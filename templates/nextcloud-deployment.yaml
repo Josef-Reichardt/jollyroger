@@ -19,6 +19,7 @@ spec:
       containers:
       - name: nextcloud
         image: {{ .Values.nextcloud.image }}
+        command: ["/custom-entrypoint.sh"]
         env:
         - name: TZ
           value: Europe/Berlin
@@ -56,12 +57,24 @@ spec:
         - containerPort: 80
           protocol: TCP
         volumeMounts:
-        - mountPath: /var/www/html
-          name: html
+        - name: html
+          mountPath: /var/www/html
+        - name: custom-entrypoint
+          mountPath: /custom-entrypoint.sh
+          subPath: custom-entrypoint.sh
+        - name: crontab
+          mountPath: /etc/cron.d/nextcloud
+          subPath: crontab
       restartPolicy: Always
       volumes:
       - name: html
         hostPath:
           path: "/data/nextcloud"
-
-
+      - name: custom-entrypoint
+        configMap:
+          name: nextcloud-config
+          defaultMode: 0777
+      - name: crontab
+        configMap:
+          name: nextcloud-config
+          defaultMode: 0777

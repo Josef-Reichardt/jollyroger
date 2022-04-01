@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-config
+data:
+  custom-entrypoint.sh: |
+    #!/bin/bash
+
+    apt update
+    apt install php-imagick
+
+    /entrypoint.sh
+  crontab: |
+    */5 * * * * www-data php -f /var/www/html/cron.php
+    0   0 * * 0 www-data php -f /var/www/html/occ fulltextsearch:index
