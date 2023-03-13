@@ -9,7 +9,7 @@ fi;
 echo ""
 echo "### Install cert-manager ###"
 microk8s.helm repo add jetstack https://charts.jetstack.io
-microk8s.kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 
 initialDatabaseRootPassword=
 databasePassword=
