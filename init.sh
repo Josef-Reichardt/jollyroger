@@ -36,7 +36,7 @@ else
   initialDatabaseRootPassword=$(head -c 24 /dev/random | base64)
   databasePassword=$(head -c 24 /dev/random | base64)
   initialNextcloudAdminPassword=$(head -c 24 /dev/random | base64)
-  microk8s.helm install "$(dirname "$0")" --name jollyroger \
+  microk8s.helm install jollyroger "$(dirname "$0")" \
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
     --set "nextcloud.initialAdminPassword=$initialNextcloudAdminPassword" \
