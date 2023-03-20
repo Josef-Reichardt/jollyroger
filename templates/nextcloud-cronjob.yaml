@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: nextcloud-cronjob
   labels:
-    app: nextcloud
+    app: nextcloud-cronjob
 spec:
   schedule: "*/5 * * * *"
   jobTemplate:
@@ -12,7 +12,7 @@ spec:
         metadata:
           name: nextcloud-cronjob
           labels:
-            app: nextcloud
+            app: nextcloud-cronjob
         spec:
           securityContext:
             runAsUser: 33
