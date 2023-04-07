@@ -30,12 +30,6 @@ data:
       location = /.well-known/caldav {
         return 301 https://{{ .Values.serverName }}/remote.php/dav/;
       }
-      location = /.well-known/webfinger  {
-        return 301 https://{{ .Values.serverName }}/index.php/.well-known/webfinger/;
-      }
-      location = /.well-known/nodeinfo  {
-        return 301 https://{{ .Values.serverName }}/index.php/.well-known/nodeinfo/;
-      }
 
       location / {
         proxy_pass http://nextcloud;
