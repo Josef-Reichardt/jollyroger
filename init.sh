@@ -47,6 +47,8 @@ else
     -f values.yaml
 fi;
 
+kubectl apply -f metrics-service/components.yaml
+
 echo ""
 echo "################################################################################"
 [ -n "$initialDatabaseRootPassword" ] && echo "### Initial Database Root Password: $initialDatabaseRootPassword"
