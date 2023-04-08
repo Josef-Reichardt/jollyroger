@@ -60,6 +60,13 @@ spec:
               mountPath: /transcode
             - name: data
               mountPath: /data
+          resources:
+            limits:
+              memory: 12Gi
+              cpu: 4
+            requests:
+              memory: 128Mi
+              cpu: 0.1
       volumes:
         - name: config
           hostPath:

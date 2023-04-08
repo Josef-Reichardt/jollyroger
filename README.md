@@ -29,3 +29,11 @@ This will do:
    1. dashboard port & token
    2. initial passwords of database users `root` & `nextcloud`
    3. initial passwords of nextcloud user `admin`
+
+## Kubernetes Metrics Service
+
+Install:
+
+```shell
+kubectl apply -f metrics-service/components.yaml
+```
