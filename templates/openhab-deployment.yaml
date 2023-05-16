@@ -33,23 +33,23 @@ spec:
         - containerPort: 8443
         volumeMounts:
         - mountPath: ./openhab_addons
-          name: openhab_addons
+          name: openhab-addons
         - mountPath: ./openhab_conf
-          name: openhab_conf
+          name: openhab-conf
         - mountPath: ./openhab_userdata
-          name: openhab_userdata
+          name: openhab-userdata
         - mountPath: /etc/localtime
           name: localtime
         - mountPath: /etc/timezone
           name: timezone
       volumes:
-      - name: openhab_addons
+      - name: openhab-addons
         hostPath:
           path: /data/openhab/addons
-      - name: openhab_conf
+      - name: openhab-conf
         hostPath:
           path: /data/openhab/conf
-      - name: openhab_userdata
+      - name: openhab-userdata
         hostPath:
           path: /data/openhab/userdata
       - name: localtime
