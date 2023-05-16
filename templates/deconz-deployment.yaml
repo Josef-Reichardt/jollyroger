@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deconz
+  name: deconz
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: deconz
+  template:
+    metadata:
+      labels:
+        app: deconz
+    spec:
+      containers:
+      - name: deconz
+        image: deconzcommunity/deconz
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - mountPath: /dev/ttyACM0
+          name: ttyacm
+        - mountPath: /opt/deconz
+          name: persistent-storage
+        - mountPath: /etc/localtime
+          name: localtime
+        - mountPath: /etc/timezone
+          name: timezone
+      volumes:
+      - name: ttyacm
+        hostPath:
+          path: /dev/ttyACM0
+      - name: persistent-storage
+        hostPath:
+          path: /data/deconz
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: timezone
+        hostPath:
+          path: /etc/timezone

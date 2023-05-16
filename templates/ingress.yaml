@@ -13,6 +13,7 @@ spec:
     - secretName: jollyroger-letsencrypt-secret
       hosts:
         - jollyroger.duckdns.org
+        - home.jollyroger.duckdns.org
   rules:
     - host: jollyroger.duckdns.org
       http:
@@ -22,5 +23,15 @@ spec:
             backend:
               service:
                 name: nginx
+                port:
+                  name: http
+    - host: home.jollyroger.duckdns.org
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: openhab
                 port:
                   name: http

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openhab
+  name: openhab
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: openhab
+  template:
+    metadata:
+      labels:
+        app: openhab
+    spec:
+      containers:
+      - name: openhab
+        image: openhab/openhab
+        env:
+          - name: CRYPTO_POLICY
+            value: "unlimited"
+          - name: EXTRA_JAVA_OPTS
+            value: "-Duser.timezone=Europe/Berlin"
+          - name: OPENHAB_HTTP_PORT
+            value: "8080"
+          - name: OPENHAB_HTTPS_PORT
+            value: "8443"
+        ports:
+        - containerPort: 8080
+        - containerPort: 8443
+        volumeMounts:
+        - mountPath: ./openhab_addons
+          name: openhab_addons
+        - mountPath: ./openhab_conf
+          name: openhab_conf
+        - mountPath: ./openhab_userdata
+          name: openhab_userdata
+        - mountPath: /etc/localtime
+          name: localtime
+        - mountPath: /etc/timezone
+          name: timezone
+      volumes:
+      - name: openhab_addons
+        hostPath:
+          path: /data/openhab/addons
+      - name: openhab_conf
+        hostPath:
+          path: /data/openhab/conf
+      - name: openhab_userdata
+        hostPath:
+          path: /data/openhab/userdata
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: timezone
+        hostPath:
+          path: /etc/timezone
