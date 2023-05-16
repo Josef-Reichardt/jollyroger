@@ -35,3 +35,13 @@ spec:
                 name: openhab
                 port:
                   name: http
+    - host: deconz.jollyroger.duckdns.org
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: deconz
+                port:
+                  name: http
