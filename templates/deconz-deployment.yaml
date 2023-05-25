@@ -19,12 +19,15 @@ spec:
       containers:
       - name: deconz
         image: deconzcommunity/deconz
+        env:
+          - name: DECONZ_DEVICE
+            value: "/dev/ttyACM0"
         ports:
         - containerPort: 80
         - containerPort: 443
         volumeMounts:
         - mountPath: /dev/ttyACM0
-          name: ttyacm
+          name: device
         - mountPath: /opt/deCONZ
           name: persistent-storage
         - mountPath: /etc/localtime
@@ -32,7 +35,7 @@ spec:
         - mountPath: /etc/timezone
           name: timezone
       volumes:
-      - name: ttyacm
+      - name: device
         hostPath:
           path: /dev/ttyACM0
       - name: persistent-storage
