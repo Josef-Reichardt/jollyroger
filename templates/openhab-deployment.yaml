@@ -32,11 +32,11 @@ spec:
         - containerPort: 8080
         - containerPort: 8443
         volumeMounts:
-        - mountPath: ./openhab_addons
+        - mountPath: /openhab/addons
           name: openhab-addons
-        - mountPath: ./openhab_conf
+        - mountPath: /openhab/conf
           name: openhab-conf
-        - mountPath: ./openhab_userdata
+        - mountPath: /openhab/userdata
           name: openhab-userdata
         - mountPath: /etc/localtime
           name: localtime
