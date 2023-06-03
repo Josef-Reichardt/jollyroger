@@ -23,11 +23,11 @@ spec:
           - name: DECONZ_DEVICE
             value: "/dev/ttyACM0"
           - name: DECONZ_WEB_PORT
-            value: 30080
+            value: "30080"
           - name: DECONZ_WS_PORT
-            value: 30443
+            value: "30443"
           - name: DECONZ_VNC_PASSWORD
-            value: 5ef61c4a-f38c-4a32-8e89-fd1129265f07
+            value: "5ef61c4a-f38c-4a32-8e89-fd1129265f07"
         ports:
         - name: http
           containerPort: 30080
