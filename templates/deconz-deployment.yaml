@@ -27,8 +27,8 @@ spec:
           - name: DECONZ_WS_PORT
             value: 9443
         ports:
-        - containerPort: 80
-        - containerPort: 443
+        - containerPort: 9000
+        - containerPort: 9443
         securityContext:
           privileged: true
         volumeMounts:

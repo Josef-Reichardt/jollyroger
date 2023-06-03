@@ -9,11 +9,11 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 9000
+      targetPort: 9000
       nodePort: 9000
     - name: https
       protocol: TCP
-      port: 443
-      targetPort: 443
+      port: 9443
+      targetPort: 9443
       nodePort: 9443
