@@ -23,12 +23,12 @@ spec:
           - name: DECONZ_DEVICE
             value: "/dev/ttyACM0"
           - name: DECONZ_WEB_PORT
-            value: 9000
+            value: 30080
           - name: DECONZ_WS_PORT
-            value: 9443
+            value: 30443
         ports:
-        - containerPort: 9000
-        - containerPort: 9443
+        - containerPort: 30080
+        - containerPort: 30443
         securityContext:
           privileged: true
         volumeMounts:
