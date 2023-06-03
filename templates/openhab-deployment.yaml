@@ -29,8 +29,14 @@ spec:
           - name: OPENHAB_HTTPS_PORT
             value: "8443"
         ports:
-        - containerPort: 8080
-        - containerPort: 8443
+        - name: http
+          containerPort: 8080
+          hostPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+          hostPort: 8443
+          protocol: TCP
         volumeMounts:
         - mountPath: /openhab/addons
           name: openhab-addons
