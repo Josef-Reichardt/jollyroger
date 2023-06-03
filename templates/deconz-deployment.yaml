@@ -22,6 +22,10 @@ spec:
         env:
           - name: DECONZ_DEVICE
             value: "/dev/ttyACM0"
+          - name: DECONZ_WEB_PORT
+            value: 9000
+          - name: DECONZ_WS_PORT
+            value: 9443
         ports:
         - containerPort: 80
         - containerPort: 443
