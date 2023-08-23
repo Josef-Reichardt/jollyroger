@@ -18,7 +18,7 @@ spec:
       protocol: TCP
       port: 35900
       targetPort: 35900
-    - name: noVnc
+    - name: novnc
       protocol: TCP
       port: 36080
       targetPort: 36080

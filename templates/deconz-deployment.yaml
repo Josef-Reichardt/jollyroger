@@ -45,7 +45,7 @@ spec:
           containerPort: 35900
           hostPort: 35900
           protocol: TCP
-        - name:  noVnc
+        - name:  novnc
           containerPort: 36080
           hostPort: 36080
           protocol: TCP
