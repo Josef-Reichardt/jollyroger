@@ -29,3 +29,6 @@ backup:
 plex:
   image: plexinc/pms-docker
   # claim: claim-1234567890
+
+deconz:
+  vncEnabled: 0

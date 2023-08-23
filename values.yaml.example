@@ -7,3 +7,6 @@ backup:
 
 plex:
   claim: claim-1234567890
+
+deconz:
+  vncEnabled: 1
