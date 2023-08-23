@@ -14,3 +14,11 @@ spec:
       protocol: TCP
       port: 30443
       targetPort: 30443
+    - name: vnc
+      protocol: TCP
+      port: 35900
+      targetPort: 35900
+    - name: noVnc
+      protocol: TCP
+      port: 36080
+      targetPort: 36080

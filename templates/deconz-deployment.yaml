@@ -26,6 +26,10 @@ spec:
             value: "30080"
           - name: DECONZ_WS_PORT
             value: "30443"
+          - name: DECONZ_VNC_PORT
+            value: "35900"
+          - name: DECONZ_NOVNC_PORT
+            value: "36080"
           - name: DECONZ_VNC_PASSWORD
             value: "5ef61c4a-f38c-4a32-8e89-fd1129265f07"
         ports:
@@ -36,6 +40,14 @@ spec:
         - name: https
           containerPort: 30443
           hostPort: 30443
+          protocol: TCP
+        - name: vnc
+          containerPort: 35900
+          hostPort: 35900
+          protocol: TCP
+        - name:  noVnc
+          containerPort: 36080
+          hostPort: 36080
           protocol: TCP
         securityContext:
           privileged: true
