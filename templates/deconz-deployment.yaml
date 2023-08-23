@@ -26,6 +26,8 @@ spec:
             value: "30080"
           - name: DECONZ_WS_PORT
             value: "30443"
+          - name: DECONZ_VNC_MODE
+            value: "1"
           - name: DECONZ_VNC_PORT
             value: "35900"
           - name: DECONZ_NOVNC_PORT
