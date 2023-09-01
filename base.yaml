@@ -18,6 +18,10 @@ nextcloud:
   # initialAdminPassword: Geheim123! # pass via --set
   adminUser: admin
 
+redis:
+  image: redis:latest
+  # password: "Geheim123!"
+
 nginx:
   image: nginx:latest
 

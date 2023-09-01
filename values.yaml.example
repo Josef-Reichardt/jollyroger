@@ -10,3 +10,6 @@ plex:
 
 deconz:
   vncEnabled: "1"
+
+redis:
+  password: "Geheim123!"

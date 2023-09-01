@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nextcloud-redis
+  name: nextcloud-redis
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nextcloud-redis
+  template:
+    metadata:
+      labels:
+        app: nextcloud-redis
+    spec:
+      containers:
+        - name: nextcloud-redis
+          image: "{{ .Values.redis.image }}"
+          command:
+            - "docker-entrypoint.sh"
+            - "--requirepass"
+            - "{{ .Values.redis.password }}"
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      restartPolicy: Always
