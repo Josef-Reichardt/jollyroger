@@ -6,6 +6,8 @@ metadata:
     kubernetes.io/ingress.class: public
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: "1g"
     nginx.org/client-max-body-size: "1g"
 spec:
@@ -15,6 +17,7 @@ spec:
         - jollyroger.duckdns.org
         - home.jollyroger.duckdns.org
         - deconz.jollyroger.duckdns.org
+        - paperless.jollyroger.duckdns.org
   rules:
     - host: jollyroger.duckdns.org
       http:
@@ -43,3 +46,13 @@ spec:
                 name: openhab
                 port:
                   name: https
+    - host: paperless.jollyroger.duckdns.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: paperless
+                port:
+                  number: 8010
