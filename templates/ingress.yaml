@@ -15,8 +15,6 @@ spec:
     - secretName: jollyroger-letsencrypt-secret
       hosts:
         - jollyroger.duckdns.org
-        - home.jollyroger.duckdns.org
-        - deconz.jollyroger.duckdns.org
         - paperless.jollyroger.duckdns.org
   rules:
     - host: jollyroger.duckdns.org
@@ -29,23 +27,6 @@ spec:
                 name: nginx
                 port:
                   name: http
-    - host: home.jollyroger.duckdns.org
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: openhab
-                port:
-                  name: http
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: openhab
-                port:
-                  name: https
     - host: paperless.jollyroger.duckdns.org
       http:
         paths:
@@ -56,3 +37,4 @@ spec:
                 name: paperless
                 port:
                   number: 8010
+
