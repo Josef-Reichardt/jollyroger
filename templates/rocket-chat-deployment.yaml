@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rocket-chat
+  name: rocket-chat
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: rocket-chat
+  template:
+    metadata:
+      labels:
+        app: rocket-chat
+    spec:
+      containers:
+        - name: rocket-chat
+          image: "registry.rocket.chat/rocketchat/rocket.chat:7.2.0"
+          env:
+            - name: MONGO_URL
+              value: "mongodb://rocket-chat-mongodb:27017/rocketchat?replicaSet=rs0"
+            - name: MONGO_OPLOG_URL
+              value: "mongodb://rocket-chat-mongodb:27017/local?replicaSet=rs0"
+            - name: ROOT_URL
+              value: https://chat.jollyroger.duckdns.org
+            - name: PORT
+              value: "3000"
+            - name: DEPLOY_METHOD
+              value: docker
+            - name: DEPLOY_PLATFORM
+              value: ""
+            - name: REG_TOKEN
+              value: ""
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always

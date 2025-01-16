@@ -16,6 +16,7 @@ spec:
       hosts:
         - jollyroger.duckdns.org
         - paperless.jollyroger.duckdns.org
+        - chat.jollyroger.duckdns.org
   rules:
     - host: jollyroger.duckdns.org
       http:
@@ -37,4 +38,13 @@ spec:
                 name: paperless
                 port:
                   number: 8010
-
+    - host: chat.jollyroger.duckdns.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rocket-chat
+                port:
+                  number: 3000

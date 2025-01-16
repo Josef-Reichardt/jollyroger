@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rocket-chat-mongodb
+  name: rocket-chat-mongodb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: rocket-chat-mongodb
+  template:
+    metadata:
+      labels:
+        app: rocket-chat-mongodb
+    spec:
+      containers:
+        - name: rocket-chat-mongodb
+          image: "docker.io/bitnami/mongodb:6.0"
+          env:
+            - name: MONGODB_REPLICA_SET_MODE
+              value: primary
+            - name: MONGODB_REPLICA_SET_NAME
+              value: rs0
+            - name: MONGODB_PORT_NUMBER
+              value: "27017"
+            - name: MONGODB_INITIAL_PRIMARY_HOST
+              value: mongodb
+            - name: MONGODB_INITIAL_PRIMARY_PORT_NUMBER
+              value: "27017"
+            - name: MONGODB_ADVERTISED_HOSTNAME
+              value: mongodb
+            - name: MONGODB_ENABLE_JOURNAL
+              value: "true"
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/mongodb
+      restartPolicy: Always
+      volumes:
+        - name: data
+          hostPath:
+            path: "/data/rocket-chat-mongodb"
