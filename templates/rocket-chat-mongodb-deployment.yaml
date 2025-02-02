@@ -46,13 +46,6 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /bitnami/mongodb
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - "mongosh --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"rocket-chat-mongodb:27017\"}]})'"
       restartPolicy: Always
       volumes:
         - name: data
