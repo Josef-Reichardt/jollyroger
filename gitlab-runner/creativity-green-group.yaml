@@ -142,6 +142,7 @@ runners:
     [[runners]]
       [runners.kubernetes]
         allowed_pull_policies = ["always", "if-not-present", "never"]
+        pull_policy = "IfNotPresent"
         image = "ubuntu:16.04"
         privileged = false
         poll_timeout = 180
