@@ -143,8 +143,8 @@ runners:
       [runners.kubernetes]
         allowed_pull_policies = ["always", "if-not-present", "never"]
         pull_policy = "if-not-present"
-        image = "ubuntu:16.04"
-        privileged = false
+        image = "ubuntu:24.04"
+        privileged = true
         poll_timeout = 180
         output_limit = 4096
         cpu_request = "0.1"
@@ -159,6 +159,11 @@ runners:
         helper_cpu_limit = "4"
         helper_memory_request = "128Mi"
         helper_memory_limit = "12Gi"
+        helper_image = "gitlab/gitlab-runner-helper:x86_64-latest"
+      [runners.kubernetes.services]
+        name = "docker:dind"
+      [runners.cache]
+        path = "/cache"
 
   ## Default container image to use for builds when none is specified
   ##
