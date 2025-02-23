@@ -160,7 +160,7 @@ runners:
         helper_memory_request = "128Mi"
         helper_memory_limit = "12Gi"
         helper_image = "gitlab/gitlab-runner-helper:x86_64-latest"
-      [runners.kubernetes.services]
+      [[runners.kubernetes.services]]
         name = "docker:dind"
       [runners.cache]
         path = "/cache"
