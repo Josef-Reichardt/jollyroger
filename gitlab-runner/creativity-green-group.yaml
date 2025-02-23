@@ -162,6 +162,9 @@ runners:
         helper_image = "gitlab/gitlab-runner-helper:x86_64-latest"
       [[runners.kubernetes.services]]
         name = "docker:dind"
+        alias = "docker"
+        entrypoint = ["dockerd-entrypoint.sh"]
+        command = ["--tls=false"]
       [runners.cache]
         path = "/cache"
 
