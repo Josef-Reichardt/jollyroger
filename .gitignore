@@ -1,7 +1,8 @@
 # Secrets
 /values.yaml
 /values.yaml.bak*
-/gitlab-runner/token.yaml
+/gitlab-runner/token-creativity-green.yaml
+/gitlab-runner/token-nachhaltig-verstoert.yaml
 
 # IntelliJ IDEA
 /.idea/
