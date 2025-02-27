@@ -39,23 +39,23 @@ spec:
                 name: paperless
                 port:
                   number: 8010
-    - host: chat.jollyroger.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: rocket-chat
-                port:
-                  number: 3000
-    - host: klimachat.duckdns.org
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: rocket-chat
-                port:
-                  number: 3000
+{{/*    - host: chat.jollyroger.duckdns.org*/}}
+{{/*      http:*/}}
+{{/*        paths:*/}}
+{{/*          - path: /*/}}
+{{/*            pathType: Prefix*/}}
+{{/*            backend:*/}}
+{{/*              service:*/}}
+{{/*                name: rocket-chat*/}}
+{{/*                port:*/}}
+{{/*                  number: 3000*/}}
+{{/*    - host: klimachat.duckdns.org*/}}
+{{/*      http:*/}}
+{{/*        paths:*/}}
+{{/*          - path: /*/}}
+{{/*            pathType: Prefix*/}}
+{{/*            backend:*/}}
+{{/*              service:*/}}
+{{/*                name: rocket-chat*/}}
+{{/*                port:*/}}
+{{/*                  number: 3000*/}}
