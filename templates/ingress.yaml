@@ -16,8 +16,8 @@ spec:
       hosts:
         - jollyroger.duckdns.org
         - paperless.jollyroger.duckdns.org
-        - chat.jollyroger.duckdns.org
-        - klimachat.duckdns.org
+{{/*        - chat.jollyroger.duckdns.org*/}}
+{{/*        - klimachat.duckdns.org*/}}
   rules:
     - host: jollyroger.duckdns.org
       http:
