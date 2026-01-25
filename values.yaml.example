@@ -13,3 +13,11 @@ deconz:
 
 redis:
   password: "Geheim123!"
+
+n8n:
+  enabled: true
+  # see https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
+  main:
+    config:
+      n8n:
+        encryption_key: "Geheim123!"
