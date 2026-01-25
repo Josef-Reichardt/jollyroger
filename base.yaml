@@ -36,28 +36,3 @@ plex:
 
 deconz:
   vncEnabled: "0"
-
-n8n:
-  enabled: false
-  # see https://github.com/8gears/n8n-helm-chart/blob/main/charts/n8n/values.yaml
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: public
-      kubernetes.io/tls-acme: "true"
-      cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: "1g"
-      nginx.org/client-max-body-size: "1g"
-    # define a custom ingress class Name, like "traefik" or "nginx"
-    className: ""
-    hosts:
-      - host: n8n.jollyroger.duckdns.org
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - hosts:
-          - n8n.jollyroger.duckdns.org
-        secretName: n8n-jollyroger-duckdns-org-cert
