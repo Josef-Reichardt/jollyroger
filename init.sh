@@ -11,6 +11,8 @@ echo "### Install cert-manager ###"
 microk8s.helm repo add jetstack https://charts.jetstack.io
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 
+microk8s.helm repo add community-charts https://community-charts.github.io/helm-charts
+
 initialDatabaseRootPassword=
 databasePassword=
 initialNextcloudAdminPassword=
