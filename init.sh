@@ -11,7 +11,10 @@ echo "### Install cert-manager ###"
 microk8s.helm repo add jetstack https://charts.jetstack.io
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 
+echo ""
+echo "### load n8n sub-chart ###"
 microk8s.helm repo add community-charts https://community-charts.github.io/helm-charts
+microk8s.helm dependency build
 
 initialDatabaseRootPassword=
 databasePassword=
