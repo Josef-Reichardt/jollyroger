@@ -36,38 +36,3 @@ plex:
 
 deconz:
   vncEnabled: "0"
-
-n8n:
-  enabled: true
-  ingress:
-    enabled: true
-    annotations:
-      cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
-    hosts:
-      - host: n8n.jollyroger.duckdns.org
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: n8n-tls
-        hosts:
-          - n8n.jollyroger.duckdns.org
-  main:
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 1000m
-        memory: 1Gi
-  worker:
-    mode: queue
-    count: 3
-    concurrency: 10
-    resources:
-      requests:
-        cpu: 500m
-        memory: 512Mi
-      limits:
-        cpu: 2000m
-        memory: 2Gi

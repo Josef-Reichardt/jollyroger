@@ -3,8 +3,3 @@ appVersion: "1.0"
 description: A Helm chart for Kubernetes
 name: jollyroger
 version: 0.1.0
-dependencies:
-  - name: n8n
-    version: "1.16.28"
-    repository: https://community-charts.github.io/helm-charts
-    condition: n8n.enabled

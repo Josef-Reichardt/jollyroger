@@ -7,14 +7,14 @@ then
 fi;
 
 echo ""
-echo "### Install cert-manager ###"
+echo "### Prepare helm repos ###"
 microk8s.helm repo add jetstack https://charts.jetstack.io
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+microk8s.helm repo add community-charts https://community-charts.github.io/helm-charts
+microk8s.helm repo update
 
 echo ""
-echo "### load n8n sub-chart ###"
-microk8s.helm repo add community-charts https://community-charts.github.io/helm-charts
-microk8s.helm dependency build
+echo "### Install cert-manager ###"
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
 
 initialDatabaseRootPassword=
 databasePassword=
@@ -57,3 +57,7 @@ echo "##########################################################################
 [ -n "$initialDatabaseRootPassword" ] && echo "### Initial Database Root Password: $initialDatabaseRootPassword"
 [ -n "$databasePassword" ] && echo "### Database Password:  $databasePassword"
 [ -n "$initialNextcloudAdminPassword" ] && echo "### Initial Nextcloud Admin Password: $initialNextcloudAdminPassword"
+
+echo ""
+echo "### install n8n ###"
+helm upgrade --install n8n community-charts/n8n -f n8n.yaml
