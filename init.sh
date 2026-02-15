@@ -60,4 +60,4 @@ echo "##########################################################################
 
 echo ""
 echo "### install n8n ###"
-helm upgrade --install n8n community-charts/n8n -f n8n.yaml
+microk8s.helm upgrade --install n8n community-charts/n8n -f n8n.yaml
