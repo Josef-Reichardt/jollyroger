@@ -59,5 +59,9 @@ echo "##########################################################################
 [ -n "$initialNextcloudAdminPassword" ] && echo "### Initial Nextcloud Admin Password: $initialNextcloudAdminPassword"
 
 echo ""
+echo "### install local storage provisioner ###"
+microk8s.kubectl apply -f local-storage-class.yaml
+
+echo ""
 echo "### install n8n ###"
 microk8s.helm upgrade --install n8n community-charts/n8n -f n8n.yaml

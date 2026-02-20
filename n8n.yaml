@@ -14,8 +14,21 @@ ingress:
 
 db:
   type: postgresdb
+  logging:
+    enabled: true
+    options: error
+    maxQueryExecutionTime: 1000
 
 main:
+  persistence:
+    enabled: true
+    volumeName: "n8n-binary-data"
+    mountPath: "/home/node/.n8n"
+    size: 10Gi
+    accessMode: ReadWriteOnce
+    storageClass: "fast-ssd"
+    annotations:
+      helm.sh/resource-policy: keep
   resources:
     requests:
       cpu: 100m
@@ -38,3 +51,16 @@ worker:
 
 postgresql:
   enabled: true
+  primary:
+    persistence:
+      enabled: true
+      existingClaim: ""
+      storageClass: "fast-ssd"
+      size: 20Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
