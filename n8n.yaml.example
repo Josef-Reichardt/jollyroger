@@ -1,0 +1,7 @@
+postgresql:
+  auth:
+    password: "***"
+
+redis:
+  auth:
+    password: "***"

@@ -51,7 +51,15 @@ worker:
 
 postgresql:
   enabled: true
+  architecture: standalone
+  auth:
+    username: n8n
+#    password: ***
+    database: n8n
   primary:
+    service:
+      ports:
+        postgresql: 5432
     persistence:
       enabled: true
       existingClaim: ""
@@ -64,3 +72,10 @@ postgresql:
       limits:
         cpu: 1000m
         memory: 1Gi
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+#    password: ***
