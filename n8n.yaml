@@ -26,7 +26,7 @@ main:
     mountPath: "/home/node/.n8n"
     size: 10Gi
     accessMode: ReadWriteOnce
-    storageClass: "fast-ssd"
+    storageClass: "local-path"
     annotations:
       helm.sh/resource-policy: keep
   resources:
@@ -55,7 +55,7 @@ postgresql:
     persistence:
       enabled: true
       existingClaim: ""
-      storageClass: "fast-ssd"
+      storageClass: "local-path"
       size: 20Gi
     resources:
       requests:
