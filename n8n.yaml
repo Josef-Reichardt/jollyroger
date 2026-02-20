@@ -11,6 +11,10 @@ ingress:
     - secretName: n8n-tls
       hosts:
         - n8n.jollyroger.duckdns.org
+
+db:
+  type: postgresdb
+
 main:
   resources:
     requests:
@@ -19,6 +23,7 @@ main:
     limits:
       cpu: 1000m
       memory: 1Gi
+
 worker:
   mode: queue
   count: 3
