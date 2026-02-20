@@ -1,6 +1,8 @@
 # Secrets
 /values.yaml
 /values.yaml.bak*
+/n8n.yaml
+/n8n.yaml.bak*
 /gitlab-runner/token-creativity-green.yaml
 /gitlab-runner/token-nachhaltig-verstoert.yaml
 
