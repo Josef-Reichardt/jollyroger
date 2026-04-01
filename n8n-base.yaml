@@ -3,14 +3,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
   hosts:
-    - host: n8n.jollyroger.duckdns.org
+    - host: n8n-jollyroger.duckdns.org
       paths:
         - path: /
           pathType: Prefix
   tls:
     - secretName: n8n-tls
       hosts:
-        - n8n.jollyroger.duckdns.org
+        - n8n-jollyroger.duckdns.org
 
 db:
   type: postgresdb
@@ -39,7 +39,7 @@ main:
 
 worker:
   mode: queue
-  count: 3
+  count: 1
   concurrency: 10
   resources:
     requests:
@@ -79,3 +79,8 @@ redis:
   auth:
     enabled: true
 #    password: ***
+
+webhook:
+  mode: queue
+  count: 1
+  url: "https://n8n-jollyroger.duckdns.org"
