@@ -13,3 +13,6 @@ deconz:
 
 redis:
   password: "Geheim123!"
+
+nextcloud:
+  initialAdminPassword: "Geheim123!"
