@@ -71,6 +71,6 @@ microk8s.helm upgrade --install n8n community-charts/n8n -f n8n-base.yaml -f n8n
 
 echo ""
 echo "### install invoice ninja ###"
-microk8s.helm upgrade invoiceninja "$(dirname "$0")/invoiceninja" \
+microk8s.helm upgrade --install invoiceninja "$(dirname "$0")/invoiceninja" \
   -f "$(dirname "$0")/invoiceninja/values.yaml" \
   -f invoiceninja.yaml
