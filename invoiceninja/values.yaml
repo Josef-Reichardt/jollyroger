@@ -24,10 +24,20 @@ nginx:
 # ─── Invoice Ninja App-Konfiguration ──────────
 env:
   APP_URL: "https://ninja.example.com"
+  APP_ENV: "production"        # Pflicht – init.sh bricht sonst ab
   APP_DEBUG: "false"
   REQUIRE_HTTPS: "true"
   TRUSTED_PROXIES: "*"
   PDF_GENERATOR: "snappdf"
+
+  # Pflicht für debian-Image: gibt den Storage-Pfad /var/www/html vor
+  FILESYSTEM_DISK: "debian_docker"
+
+  # Aktiviert Docker-spezifische Tweaks in der Laravel-App
+  IS_DOCKER: "true"
+
+  # Deaktiviert Scout-Search (kein Elasticsearch/Meilisearch vorhanden)
+  SCOUT_DRIVER: "null"
 
   # Queue: "redis" wenn redis.enabled=true, sonst "database"
   QUEUE_CONNECTION: ""   # leer = wird automatisch gesetzt
@@ -43,6 +53,16 @@ env:
 
   REDIS_HOST: ""         # leer = automatisch auf redis-StatefulSet
   REDIS_PORT: "6379"
+
+  # Mail (Pflichtfelder, sonst schlägt Laravel-Bootstrap fehl)
+  MAIL_MAILER: "log"     # "log" = kein echter Mailserver nötig zum Starten
+  MAIL_HOST: ""
+  MAIL_PORT: "2525"
+  MAIL_USERNAME: ""
+  MAIL_PASSWORD: ""
+  MAIL_ENCRYPTION: ""
+  MAIL_FROM_ADDRESS: "ninja@example.com"
+  MAIL_FROM_NAME: "Invoice Ninja"
 
   # Initiales Admin-Konto – nach erstem Start entfernen!
   IN_USER_EMAIL: ""

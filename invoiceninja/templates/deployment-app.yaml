@@ -18,6 +18,7 @@ spec:
         app.kubernetes.io/component: app
     spec:
       initContainers:
+        # Setzt Ordner-Permissions bevor app-Container startet
         - name: fix-permissions
           image: busybox
           command: ["sh", "-c", "chown -R 1500:1500 /var/www/html/public /var/www/html/storage || true"]
@@ -28,13 +29,15 @@ spec:
               mountPath: /var/www/html/storage
 
       containers:
-        # ── 1) Invoice Ninja (php-fpm) ────────────────────────────────────────
+        # ── 1) Invoice Ninja (php-fpm + supervisor) ───────────────────────────
         - name: app
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           env:
             - name: APP_URL
               value: {{ .Values.env.APP_URL | quote }}
+            - name: APP_ENV
+              value: {{ .Values.env.APP_ENV | quote }}
             - name: APP_KEY
               valueFrom:
                 secretKeyRef:
@@ -48,6 +51,12 @@ spec:
               value: {{ .Values.env.TRUSTED_PROXIES | quote }}
             - name: PDF_GENERATOR
               value: {{ .Values.env.PDF_GENERATOR | quote }}
+            - name: FILESYSTEM_DISK
+              value: {{ .Values.env.FILESYSTEM_DISK | quote }}
+            - name: IS_DOCKER
+              value: {{ .Values.env.IS_DOCKER | quote }}
+            - name: SCOUT_DRIVER
+              value: {{ .Values.env.SCOUT_DRIVER | quote }}
             - name: QUEUE_CONNECTION
               value: {{ include "invoiceninja.queueConnection" . | quote }}
             - name: CACHE_DRIVER
@@ -73,6 +82,22 @@ spec:
             - name: REDIS_PORT
               value: {{ .Values.env.REDIS_PORT | quote }}
             {{- end }}
+            - name: MAIL_MAILER
+              value: {{ .Values.env.MAIL_MAILER | quote }}
+            - name: MAIL_HOST
+              value: {{ .Values.env.MAIL_HOST | quote }}
+            - name: MAIL_PORT
+              value: {{ .Values.env.MAIL_PORT | quote }}
+            - name: MAIL_USERNAME
+              value: {{ .Values.env.MAIL_USERNAME | quote }}
+            - name: MAIL_PASSWORD
+              value: {{ .Values.env.MAIL_PASSWORD | quote }}
+            - name: MAIL_ENCRYPTION
+              value: {{ .Values.env.MAIL_ENCRYPTION | quote }}
+            - name: MAIL_FROM_ADDRESS
+              value: {{ .Values.env.MAIL_FROM_ADDRESS | quote }}
+            - name: MAIL_FROM_NAME
+              value: {{ .Values.env.MAIL_FROM_NAME | quote }}
             {{- if .Values.env.IN_USER_EMAIL }}
             - name: IN_USER_EMAIL
               value: {{ .Values.env.IN_USER_EMAIL | quote }}
@@ -90,19 +115,27 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          # php-fpm lauscht auf TCP 9000 – tcpSocket-Probe ist korrekt.
+          # Init läuft lange (Migrations, public-Sync) → großzügige Delays.
           livenessProbe:
             tcpSocket:
               port: 9000
-            initialDelaySeconds: 90
+            initialDelaySeconds: 120
             periodSeconds: 20
             failureThreshold: 6
           readinessProbe:
             tcpSocket:
               port: 9000
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 10
 
         # ── 2) nginx Sidecar ─────────────────────────────────────────────────
+        # nginx startet sofort, bekommt aber erst Traffic wenn app ready ist
+        # (readinessProbe des Pods ist UND-verknüpft über alle Container).
+        # Das Race-Condition-Problem (nginx → php-fpm nicht bereit) löst sich
+        # dadurch, dass der Pod erst dann im Service-Endpoint erscheint, wenn
+        # BEIDE Container ready sind – nginx selbst puffert fehlgeschlagene
+        # Upstream-Verbindungen mit 502, die aber nie nach außen gelangen.
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
@@ -123,18 +156,18 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          # nginx ist "ready" sobald er antwortet – Traffic kommt erst wenn
+          # auch app ready ist (Pod-Level readiness = AND aller Container)
           livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
 
       volumes:
         - name: app-public

@@ -5,6 +5,16 @@ env:
   TRUSTED_PROXIES: "*"
   PDF_GENERATOR: "snappdf"
 
+  # Mail (Pflichtfelder, sonst schlägt Laravel-Bootstrap fehl)
+  MAIL_MAILER: "log"     # "log" = kein echter Mailserver nötig zum Starten
+  MAIL_HOST: ""
+  MAIL_PORT: "2525"
+  MAIL_USERNAME: ""
+  MAIL_PASSWORD: ""
+  MAIL_ENCRYPTION: ""
+  MAIL_FROM_ADDRESS: "ninja@example.com"
+  MAIL_FROM_NAME: "Invoice Ninja"
+
   # Initiales Admin-Konto – nach erstem Start entfernen!
   IN_USER_EMAIL: ""
   IN_PASSWORD: ""
