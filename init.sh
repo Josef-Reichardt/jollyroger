@@ -23,9 +23,16 @@ if microk8s.helm list | grep -q jollyroger
 then
   echo ""
   echo "### Upgrade Helm Chart ###"
-  initialDatabaseRootPassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml 2>/dev/null | grep MYSQL_ROOT_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null || echo "changeme")
-  databasePassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml 2>/dev/null | grep MYSQL_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null || echo "changeme")
-  initialNextcloudAdminPassword=$(microk8s.kubectl get secret nextcloud-secrets -o yaml 2>/dev/null | grep NEXTCLOUD_ADMIN_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null || echo "changeme")
+
+  initialDatabaseRootPassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml 2>/dev/null | grep MYSQL_ROOT_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null)
+  initialDatabaseRootPassword=${initialDatabaseRootPassword:-"changeme"}
+
+  databasePassword=$(microk8s.kubectl get secret mariadb-secrets -o yaml 2>/dev/null | grep MYSQL_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null)
+  databasePassword=${databasePassword:-"changeme"}
+
+  initialNextcloudAdminPassword=$(microk8s.kubectl get secret nextcloud-secrets -o yaml 2>/dev/null | grep NEXTCLOUD_ADMIN_PASSWORD | sed 's/^.*: "\?\(.*\)"\?$/\1/' | base64 -d 2>/dev/null)
+  initialNextcloudAdminPassword=${initialNextcloudAdminPassword:-"changeme"}
+
   microk8s.helm upgrade jollyroger "$(dirname "$0")" \
     --set "mariadb.initialRootPassword=$initialDatabaseRootPassword" \
     --set "mariadb.password=$databasePassword" \
