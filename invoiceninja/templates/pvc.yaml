@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "invoiceninja.fullname" . }}-public
+  labels:
+    {{- include "invoiceninja.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.public.accessMode | quote }}
+  {{- if .Values.persistence.public.storageClass }}
+  storageClassName: {{ .Values.persistence.public.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.public.size | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "invoiceninja.fullname" . }}-storage
+  labels:
+    {{- include "invoiceninja.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.storage.accessMode | quote }}
+  {{- if .Values.persistence.storage.storageClass }}
+  storageClassName: {{ .Values.persistence.storage.storageClass | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.storage.size | quote }}

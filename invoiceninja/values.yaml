@@ -1,0 +1,133 @@
+# ─────────────────────────────────────────────
+# Invoice Ninja – Helm Values
+# ─────────────────────────────────────────────
+
+app:
+  image:
+    repository: invoiceninja/invoiceninja-debian
+    tag: "5.12.69"   # https://hub.docker.com/r/invoiceninja/invoiceninja-debian/tags
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources: {}
+
+nginx:
+  image:
+    repository: nginx
+    tag: "1.28.3-alpine3.23"   # stable-Track; https://hub.docker.com/_/nginx/tags
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+  resources: {}
+
+# ─── Invoice Ninja App-Konfiguration ──────────
+env:
+  APP_URL: "https://ninja.example.com"
+  APP_DEBUG: "false"
+  REQUIRE_HTTPS: "true"
+  TRUSTED_PROXIES: "*"
+  PDF_GENERATOR: "snappdf"
+
+  # Queue: "redis" wenn redis.enabled=true, sonst "database"
+  QUEUE_CONNECTION: ""   # leer = wird automatisch gesetzt
+
+  # Cache: "redis" wenn redis.enabled=true, sonst "file"
+  CACHE_DRIVER: ""       # leer = wird automatisch gesetzt
+
+  DB_HOST: ""            # leer = automatisch auf mysql-StatefulSet
+  DB_PORT: "3306"
+  DB_DATABASE: "ninja"
+  DB_USERNAME: "ninja"
+  DB_CONNECTION: "mysql"
+
+  REDIS_HOST: ""         # leer = automatisch auf redis-StatefulSet
+  REDIS_PORT: "6379"
+
+  # Initiales Admin-Konto – nach erstem Start entfernen!
+  IN_USER_EMAIL: ""
+  IN_PASSWORD: ""
+
+# ─── Secrets ──────────────────────────────────
+secret:
+  APP_KEY: "base64:CHANGEME="
+  DB_PASSWORD: "changeme"
+  MYSQL_ROOT_PASSWORD: "changeme_root"
+
+# ─── MySQL StatefulSet ─────────────────────────
+mysql:
+  enabled: true
+  image:
+    repository: mysql
+    tag: "8.4.8"   # LTS-Track (8.4.x); https://hub.docker.com/_/mysql
+    pullPolicy: IfNotPresent
+  auth:
+    database: ninja
+    username: ninja
+  persistence:
+    storageClass: ""
+    size: 10Gi
+  resources: {}
+
+# ─── Redis StatefulSet ────────────────────────
+# Optional aber empfohlen.
+# Bei enabled=false: QUEUE_CONNECTION=database, CACHE_DRIVER=file
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "8.6.2-alpine3.23"   # https://hub.docker.com/_/redis
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: false       # Redis-Daten sind flüchtig – für Prod auf true setzen
+    storageClass: ""
+    size: 1Gi
+  resources: {}
+
+# ─── Persistente Volumes (app_public + app_storage) ──
+persistence:
+  public:
+    storageClass: ""
+    size: 5Gi
+    accessMode: ReadWriteOnce  # RWO reicht beim Sidecar-Pattern
+  storage:
+    storageClass: ""
+    size: 10Gi
+    accessMode: ReadWriteOnce
+
+# ─── Ingress ──────────────────────────────────
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  #   cert-manager.io/cluster-issuer: letsencrypt-prod
+  host: ninja.example.com
+  tls:
+    enabled: false
+    secretName: invoiceninja-tls
+
+# ─── nginx-Konfiguration ──────────────────────
+nginxConfig: |
+  server {
+      listen 80;
+      server_name _;
+      root /var/www/html/public;
+      index index.php index.html;
+
+      client_max_body_size 100M;
+
+      location / {
+          try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      location ~ \.php$ {
+          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          include fastcgi_params;
+      }
+
+      location ~ /\.ht {
+          deny all;
+      }
+  }

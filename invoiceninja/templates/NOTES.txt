@@ -1,0 +1,47 @@
+🎉 Invoice Ninja wurde installiert!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WICHTIG: APP_KEY setzen
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Falls noch nicht geschehen, generiere deinen APP_KEY:
+
+  docker run --rm invoiceninja/invoiceninja-debian php artisan key:generate --show
+
+Und trage ihn in values.yaml unter secret.APP_KEY ein, dann:
+
+  helm upgrade {{ .Release.Name }} . -f values.yaml
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Erreichbarkeit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{{- if .Values.ingress.enabled }}
+  URL: http{{ if .Values.ingress.tls.enabled }}s{{ end }}://{{ .Values.ingress.host }}
+{{- else }}
+  Port-Forward:
+  kubectl port-forward svc/{{ include "invoiceninja.fullname" . }} 8080:80
+  → http://localhost:8080
+{{- end }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Queue / Cache
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  QUEUE_CONNECTION : {{ include "invoiceninja.queueConnection" . }}
+  CACHE_DRIVER     : {{ include "invoiceninja.cacheDriver" . }}
+{{- if not .Values.redis.enabled }}
+
+  ⚠️  Redis ist deaktiviert. Jobs laufen über die Datenbank,
+     Cache landet auf dem Dateisystem. Für Produktion empfohlen:
+     redis.enabled=true
+{{- end }}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Erster Login
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  E-Mail:   {{ .Values.env.IN_USER_EMAIL | default "admin@example.com" }}
+  Passwort: (wie in IN_PASSWORD gesetzt, Standard: changeme!)
+
+  ⚠️  Nach dem ersten Start IN_USER_EMAIL + IN_PASSWORD
+     aus values.yaml entfernen und helm upgrade ausführen!
+
+  Datenbank-Host im Setup-Formular:
+  {{ include "invoiceninja.mysqlHost" . }}

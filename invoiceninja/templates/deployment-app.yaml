@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "invoiceninja.fullname" . }}-app
+  labels:
+    {{- include "invoiceninja.labels" . | nindent 4 }}
+    app.kubernetes.io/component: app
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "invoiceninja.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      labels:
+        {{- include "invoiceninja.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: app
+    spec:
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: ["sh", "-c", "chown -R 1500:1500 /var/www/html/public /var/www/html/storage || true"]
+          volumeMounts:
+            - name: app-public
+              mountPath: /var/www/html/public
+            - name: app-storage
+              mountPath: /var/www/html/storage
+
+      containers:
+        # ── 1) Invoice Ninja (php-fpm) ────────────────────────────────────────
+        - name: app
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          env:
+            - name: APP_URL
+              value: {{ .Values.env.APP_URL | quote }}
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "invoiceninja.fullname" . }}
+                  key: APP_KEY
+            - name: APP_DEBUG
+              value: {{ .Values.env.APP_DEBUG | quote }}
+            - name: REQUIRE_HTTPS
+              value: {{ .Values.env.REQUIRE_HTTPS | quote }}
+            - name: TRUSTED_PROXIES
+              value: {{ .Values.env.TRUSTED_PROXIES | quote }}
+            - name: PDF_GENERATOR
+              value: {{ .Values.env.PDF_GENERATOR | quote }}
+            - name: QUEUE_CONNECTION
+              value: {{ include "invoiceninja.queueConnection" . | quote }}
+            - name: CACHE_DRIVER
+              value: {{ include "invoiceninja.cacheDriver" . | quote }}
+            - name: DB_CONNECTION
+              value: {{ .Values.env.DB_CONNECTION | quote }}
+            - name: DB_HOST
+              value: {{ include "invoiceninja.mysqlHost" . | quote }}
+            - name: DB_PORT
+              value: {{ .Values.env.DB_PORT | quote }}
+            - name: DB_DATABASE
+              value: {{ .Values.env.DB_DATABASE | quote }}
+            - name: DB_USERNAME
+              value: {{ .Values.env.DB_USERNAME | quote }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "invoiceninja.fullname" . }}
+                  key: DB_PASSWORD
+            {{- if .Values.redis.enabled }}
+            - name: REDIS_HOST
+              value: {{ include "invoiceninja.redisHost" . | quote }}
+            - name: REDIS_PORT
+              value: {{ .Values.env.REDIS_PORT | quote }}
+            {{- end }}
+            {{- if .Values.env.IN_USER_EMAIL }}
+            - name: IN_USER_EMAIL
+              value: {{ .Values.env.IN_USER_EMAIL | quote }}
+            {{- end }}
+            {{- if .Values.env.IN_PASSWORD }}
+            - name: IN_PASSWORD
+              value: {{ .Values.env.IN_PASSWORD | quote }}
+            {{- end }}
+          volumeMounts:
+            - name: app-public
+              mountPath: /var/www/html/public
+            - name: app-storage
+              mountPath: /var/www/html/storage
+          {{- with .Values.app.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 90
+            periodSeconds: 20
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+        # ── 2) nginx Sidecar ─────────────────────────────────────────────────
+        - name: nginx
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+            - name: app-public
+              mountPath: /var/www/html/public
+              readOnly: true
+            - name: app-storage
+              mountPath: /var/www/html/storage
+              readOnly: true
+          {{- with .Values.nginx.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+      volumes:
+        - name: app-public
+          persistentVolumeClaim:
+            claimName: {{ include "invoiceninja.fullname" . }}-public
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: {{ include "invoiceninja.fullname" . }}-storage
+        - name: nginx-config
+          configMap:
+            name: {{ include "invoiceninja.fullname" . }}-nginx

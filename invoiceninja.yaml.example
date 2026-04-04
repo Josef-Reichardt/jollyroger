@@ -1,0 +1,42 @@
+env:
+  APP_URL: "https://ninja.example.com"
+  APP_DEBUG: "false"
+  REQUIRE_HTTPS: "true"
+  TRUSTED_PROXIES: "*"
+  PDF_GENERATOR: "snappdf"
+
+  # Initiales Admin-Konto – nach erstem Start entfernen!
+  IN_USER_EMAIL: ""
+  IN_PASSWORD: ""
+
+secret:
+  APP_KEY: "base64:CHANGEME="
+  DB_PASSWORD: "changeme"
+  MYSQL_ROOT_PASSWORD: "changeme_root"
+
+mysql:
+  persistence:
+    storageClass: "local-path"
+    size: 10Gi
+
+redis:
+  persistence:
+    storageClass: "local-path"
+    size: 1Gi
+
+persistence:
+  public:
+    storageClass: "local-path"
+    size: 5Gi
+  storage:
+    storageClass: "local-path"
+    size: 10Gi
+
+ingress:
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: jollyroger-letsencrypt-issuer
+  host: ninja-jollyroger.duckdns.org
+  tls:
+    enabled: true
+    secretName: invoiceninja-tls

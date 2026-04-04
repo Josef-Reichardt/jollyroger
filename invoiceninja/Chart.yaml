@@ -1,0 +1,14 @@
+apiVersion: v2
+name: invoiceninja
+description: Invoice Ninja (Debian image) Helm Chart
+type: application
+version: 0.1.0
+appVersion: "latest"
+keywords:
+  - invoiceninja
+  - invoicing
+home: https://invoiceninja.com
+sources:
+  - https://github.com/invoiceninja/dockerfiles/tree/debian/debian
+maintainers:
+  - name: Josef
