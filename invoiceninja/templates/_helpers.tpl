@@ -55,26 +55,16 @@ Redis host – explizit oder automatisch auf den StatefulSet-Service
 {{/*
 QUEUE_CONNECTION: "redis" wenn redis aktiviert, sonst "database"
 Kann durch env.QUEUE_CONNECTION überschrieben werden.
+WICHTIG: Alles in einer Zeile – kein Newline im Rückgabewert.
 */}}
 {{- define "invoiceninja.queueConnection" -}}
-{{- if .Values.env.QUEUE_CONNECTION }}
-{{- .Values.env.QUEUE_CONNECTION }}
-{{- else if .Values.redis.enabled }}
-redis
-{{- else }}
-database
-{{- end }}
-{{- end }}
+{{- if .Values.env.QUEUE_CONNECTION -}}{{ .Values.env.QUEUE_CONNECTION }}{{- else if .Values.redis.enabled -}}redis{{- else -}}database{{- end -}}
+{{- end -}}
 
 {{/*
 CACHE_DRIVER: "redis" wenn redis aktiviert, sonst "file"
+WICHTIG: Alles in einer Zeile – kein Newline im Rückgabewert.
 */}}
 {{- define "invoiceninja.cacheDriver" -}}
-{{- if .Values.env.CACHE_DRIVER }}
-{{- .Values.env.CACHE_DRIVER }}
-{{- else if .Values.redis.enabled }}
-redis
-{{- else }}
-file
-{{- end }}
-{{- end }}
+{{- if .Values.env.CACHE_DRIVER -}}{{ .Values.env.CACHE_DRIVER }}{{- else if .Values.redis.enabled -}}redis{{- else -}}file{{- end -}}
+{{- end -}}
