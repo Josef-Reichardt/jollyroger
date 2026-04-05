@@ -136,8 +136,17 @@ nginxConfig: |
 
       client_max_body_size 100M;
 
+      disable_symlinks off;
+
       location / {
           try_files $uri $uri/ /index.php?$query_string;
+      }
+
+      location ~* ^/storage/ {
+          root /var/www/html/public;
+          try_files $uri =404;
+          expires 30d;
+          add_header Cache-Control "public";
       }
 
       location ~ \.php$ {
