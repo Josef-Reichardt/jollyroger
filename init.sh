@@ -74,7 +74,7 @@ echo "### install image-construction-service ###"
 microk8s.helm upgrade --install image-construction-service \
   --repo https://gitlab.com/api/v4/projects/creativity.green%2Ftools%2Fimg-construction-service/packages/helm/stable \
   image-construction-service \
-  --version 1.2.3
+  --version 1.2.4
 
 echo ""
 echo "### install invoice ninja ###"
