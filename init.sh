@@ -10,7 +10,6 @@ echo ""
 echo "### Prepare helm repos ###"
 microk8s.helm repo add jetstack https://charts.jetstack.io
 microk8s.helm repo add community-charts https://community-charts.github.io/helm-charts
-microk8s.helm repo add image-construction-service https://gitlab.com/api/v4/projects/creativity.green%2Ftools%2Fimg-construction-service/packages/helm/stable
 microk8s.helm repo update
 
 echo ""
@@ -73,7 +72,8 @@ microk8s.helm upgrade --install n8n community-charts/n8n -f n8n-base.yaml -f n8n
 echo ""
 echo "### install image-construction-service ###"
 microk8s.helm upgrade --install image-construction-service \
-  image-construction-service/image-construction-service \
+  --repo https://gitlab.com/api/v4/projects/creativity.green%2Ftools%2Fimg-construction-service/packages/helm/stable \
+  image-construction-service \
   --version 1.2.1
 
 echo ""
